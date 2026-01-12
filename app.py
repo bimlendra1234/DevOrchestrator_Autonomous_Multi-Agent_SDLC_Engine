@@ -5,6 +5,7 @@ Provides REST API and Web UI for the multi-agent SDLC engine.
 
 import json
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
@@ -16,7 +17,16 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import asyncio
 
-from agent.graph import agent
+# Lazy load agent to avoid import errors in serverless environments
+agent = None
+
+def get_agent():
+    """Lazy load the agent graph"""
+    global agent
+    if agent is None:
+        from agent.graph import agent as _agent
+        agent = _agent
+    return agent
 
 # Configure logging
 logging.basicConfig(
@@ -102,7 +112,8 @@ async def generate_project(request: ProjectRequest):
         logger.info(f"Received project generation request: {request.prompt}")
         
         # Invoke the agent with the user prompt
-        result = agent.invoke(
+        _agent = get_agent()
+        result = _agent.invoke(
             {"user_prompt": request.prompt},
             {"recursion_limit": request.recursion_limit}
         )
@@ -148,7 +159,8 @@ async def websocket_generate(websocket: WebSocket):
                 })
                 
                 # Invoke the agent
-                result = agent.invoke(
+                _agent = get_agent()
+                result = _agent.invoke(
                     {"user_prompt": prompt},
                     {"recursion_limit": recursion_limit}
                 )
