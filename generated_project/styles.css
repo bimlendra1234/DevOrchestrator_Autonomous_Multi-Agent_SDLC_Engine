@@ -1,0 +1,167 @@
+/*
+ * SimpleCalc – Responsive Calculator Styles (styles.css)
+ * -------------------------------------------------------
+ * This stylesheet defines the visual look of the calculator UI.
+ * It follows a mobile‑first approach, uses CSS custom properties for
+ * easy theming, and provides responsive adjustments for larger screens.
+ */
+
+/* ------------------------------------------------------------------
+   Root variables – adjust these to re‑theme the calculator.
+   ------------------------------------------------------------------ */
+:root {
+    /* Typography */
+    --font-family: 'Arial', Helvetica, sans-serif;
+    --font-size-base: 1rem;               /* Base font size (mobile) */
+    --font-size-large: 1.125rem;          /* Font size for >600px */
+
+    /* Colours */
+    --color-bg: #f9f9f9;                  /* Page background */
+    --color-panel: #ffffff;               /* Calculator panel background */
+    --color-input-bg: #fff;
+    --color-input-border: #cccccc;
+    --color-text: #333333;
+    --color-primary: #4a90e2;            /* Accent colour */
+    --color-success: #28a745;            /* Result – success */
+    --color-error: #dc3545;              /* Result – error */
+    --color-btn-bg: #e0e0e0;             /* Default button background */
+    --color-btn-text: #333333;
+    --color-btn-primary: var(--color-primary);
+    --color-btn-primary-text: #ffffff;
+
+    /* Spacing & layout */
+    --spacing: 0.75rem;
+    --border-radius: 0.5rem;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ------------------------------------------------------------------
+   Global reset & page layout
+   ------------------------------------------------------------------ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-bg);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    padding: var(--spacing);
+}
+
+/* ------------------------------------------------------------------
+   Calculator container
+   ------------------------------------------------------------------ */
+.calculator {
+    max-width: 400px;               /* Fixed max width for larger screens */
+    width: 90%;                     /* Mobile‑first full‑width percentage */
+    margin: auto;
+    padding: var(--spacing);
+    background: var(--color-panel);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
+}
+
+/* ------------------------------------------------------------------
+   Input fields
+   ------------------------------------------------------------------ */
+.input-field {
+    width: 100%;
+    padding: calc(var(--spacing) * 0.6);
+    font-size: 1rem;
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--border-radius);
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    margin-bottom: var(--spacing);
+}
+
+/* ------------------------------------------------------------------
+   Buttons container & individual buttons
+   ------------------------------------------------------------------ */
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;                     /* Explicit gap as requested */
+}
+
+.buttons button {
+    flex: 1 1 45%;                /* Two buttons per row with a little gap */
+    padding: var(--spacing);
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--color-btn-bg);
+    border: 1px solid var(--color-btn-primary);
+    border-radius: var(--border-radius);
+    color: var(--color-btn-text);
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.buttons button:hover,
+.buttons button:focus {
+    background: var(--color-primary);
+    color: var(--color-btn-primary-text);
+    outline: none;
+}
+
+.buttons button:active {
+    transform: scale(0.96);
+}
+
+/* ------------------------------------------------------------------
+   Result & error messages
+   ------------------------------------------------------------------ */
+.result {
+    font-weight: 600;
+    color: var(--color-success);
+}
+
+.error {
+    font-weight: 600;
+    color: var(--color-error);
+}
+
+/* ------------------------------------------------------------------
+   Media queries – adjust layout for small screens (<600px)
+   ------------------------------------------------------------------ */
+@media (max-width: 599px) {
+    .calculator {
+        width: 90%;               /* Ensure it stays within viewport */
+    }
+    .buttons {
+        flex-direction: column;   /* Stack buttons vertically */
+    }
+    .buttons button {
+        flex: 1 1 100%;
+    }
+}
+
+/* ------------------------------------------------------------------
+   Media queries – larger screens (>=600px)
+   ------------------------------------------------------------------ */
+@media (min-width: 600px) {
+    body {
+        font-size: var(--font-size-large);
+    }
+    .calculator {
+        max-width: 500px;          /* Slightly larger on wide screens */
+    }
+    .input-field {
+        font-size: 1.125rem;
+        padding: calc(var(--spacing) * 0.8);
+    }
+    .buttons button {
+        font-size: 1.125rem;
+        padding: calc(var(--spacing) * 1.2);
+    }
+}

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOrchestrator - AI-Powered Code Generator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-content">
+                    <div class="logo">
+                        <i class="fas fa-robot"></i>
+                        <span>DevOrchestrator</span>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#generator">Generator</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                        <li><a href="https://github.com" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Build Complete Projects in Minutes</h1>
+                    <p>DevOrchestrator is an autonomous multi-agent software development engine that generates full-stack projects from natural language descriptions.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="scrollToGenerator()">
+                            <i class="fas fa-play"></i> Try Now
+                        </button>
+                        <button class="btn btn-secondary" onclick="learnMore()">
+                            <i class="fas fa-book"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="floating-card">
+                        <i class="fas fa-code"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                        <h3>Multi-Agent Orchestration</h3>
+                        <p>Planner, Architect, and Coder agents work together seamlessly to create production-ready code.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-lightning-bolt"></i></div>
+                        <h3>Lightning Fast</h3>
+                        <p>Powered by Groq's LPU for ultra-low latency inference and rapid code generation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Type-Safe</h3>
+                        <p>Pydantic validation ensures structured, reliable communication between agents.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cubes"></i></div>
+                        <h3>Full Stack</h3>
+                        <p>Generate complete projects with frontend, backend, and database configurations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cogs"></i></div>
+                        <h3>Customizable</h3>
+                        <p>Fine-tune generation with custom recursion limits and configuration options.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Scalable</h3>
+                        <p>Deploy on cloud platforms with Docker and manage multiple concurrent projects.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generator Section -->
+        <section id="generator" class="generator">
+            <div class="container">
+                <h2>Generate Your Project</h2>
+                <div class="generator-content">
+                    <div class="generator-left">
+                        <form id="projectForm" class="project-form">
+                            <div class="form-group">
+                                <label for="prompt">Project Description</label>
+                                <textarea 
+                                    id="prompt" 
+                                    name="prompt" 
+                                    placeholder="Describe your project. E.g., 'Create a real-time chat application with user authentication'"
+                                    rows="6"
+                                    required
+                                ></textarea>
+                                <small>Be specific about features, tech stack, and requirements</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recursionLimit">Recursion Limit</label>
+                                <div class="input-with-info">
+                                    <input 
+                                        type="number" 
+                                        id="recursionLimit" 
+                                        name="recursionLimit" 
+                                        min="10" 
+                                        max="500" 
+                                        value="100"
+                                    >
+                                    <span class="info-icon" title="Maximum iterations for the generation process">?</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <i class="fas fa-magic"></i> Generate Project
+                            </button>
+                        </form>
+
+                        <!-- Quick Examples -->
+                        <div class="quick-examples">
+                            <h4>Quick Examples:</h4>
+                            <div class="example-chips">
+                                <button class="chip" onclick="useExample('Create a web-based todo application with add, edit, and delete functionality')">
+                                    📝 Todo App
+                                </button>
+                                <button class="chip" onclick="useExample('Build a calculator app that can perform basic arithmetic operations')">
+                                    🧮 Calculator
+                                </button>
+                                <button class="chip" onclick="useExample('Create a weather application that displays temperature and forecast')">
+                                    ⛅ Weather App
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="generator-right">
+                        <div id="outputPanel" class="output-panel">
+                            <div class="output-header">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <h3>Generation Progress</h3>
+                                    <span id="miniSpinner" class="mini-spinner hidden">⚙️</span>
+                                </div>
+                                <span id="statusBadge" class="badge badge-default">Ready</span>
+                            </div>
+                            <div id="outputContent" class="output-content">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Your project output will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Files Viewer (hidden until generation completes) -->
+                        <div id="filesPanel" class="files-panel hidden">
+                            <div class="files-header">
+                                <h3>Generated Files</h3>
+                                <button class="btn-icon" onclick="toggleFileTree()" title="Toggle file tree">
+                                    <i class="fas fa-folder-tree"></i>
+                                </button>
+                            </div>
+                            <div id="fileTree" class="file-tree"></div>
+                            <div id="fileViewer" class="file-viewer">
+                                <div class="file-viewer-header">
+                                    <span id="currentFile" class="current-file"></span>
+                                    <button class="btn-icon" onclick="closeFileViewer()" title="Close">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <pre id="fileContent" class="file-content"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Examples Section -->
+        <section id="examples" class="examples">
+            <div class="container">
+                <h2>Example Projects</h2>
+                <div id="examplesGrid" class="examples-grid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section class="architecture">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="architecture-flow">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <h3>Planner</h3>
+                        <p>Analyzes requirements and generates high-level project plan</p>
+                    </div>
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <h3>Architect</h3>
+                        <p>Creates task decomposition and implementation steps</p>
+                    </div>
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <h3>Coder</h3>
+                        <p>Implements code with file system access and validation</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Transform Your Development Process?</h2>
+                <p>Start building better software faster with DevOrchestrator</p>
+                <button class="btn btn-primary btn-large" onclick="scrollToGenerator()">
+                    Generate Your First Project
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>DevOrchestrator</h4>
+                        <p>Multi-agent autonomous SDLC engine powered by LangGraph and Groq</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Tech Stack</h4>
+                        <ul>
+                            <li><a href="https://github.com/langchain-ai/langgraph">LangGraph</a></li>
+                            <li><a href="https://groq.com/">Groq</a></li>
+                            <li><a href="https://pydantic-docs.helpmanual.io/">Pydantic</a></li>
+                            <li><a href="https://www.python.org/">Python 3.11+</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="https://github.com">GitHub Repository</a></li>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">API Reference</a></li>
+                            <li><a href="#">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 DevOrchestrator. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

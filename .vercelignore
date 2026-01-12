@@ -1,0 +1,66 @@
+# Vercel ignore file
+# Files and directories to exclude from deployment
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Generated projects
+generated_projects/
+pre_generated_project_*/
+
+# Git
+.git/
+.gitignore
+
+# Documentation (optional - remove if you want docs deployed)
+*.md
+!README.md
+
+# Test files
+tests/
+test_*.py
+*_test.py
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deployment files for other platforms
+railway.json
+render.yaml
+cloudbuild.yaml
+azure-deploy.sh
+gcp-deploy.sh
+deploy-fly.sh
+docker-compose.yml
+nginx.conf
+

@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "buildCommand": "pip install -r requirements.txt",
+  "outputDirectory": ".",
+  "framework": null,
+  "devCommand": "python app.py",
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ],
+  "env": {
+    "PORT": "8000"
+  }
+}
+

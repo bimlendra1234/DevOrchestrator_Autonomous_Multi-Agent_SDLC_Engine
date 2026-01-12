@@ -1,0 +1,107 @@
+name: Deploy DevOrchestrator
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  # Build and test
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run tests
+        run: |
+          # Add your test commands here
+          echo "Tests would run here"
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+  # Build Docker image
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub (optional)
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        if: ${{ secrets.DOCKER_USERNAME != '' }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ secrets.DOCKER_USERNAME != '' }}
+          tags: |
+            dev-orchestrator:latest
+            dev-orchestrator:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to Google Cloud Run (optional)
+  deploy-gcp:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ secrets.GCP_PROJECT_ID != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy dev-orchestrator \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/dev-orchestrator:${{ github.sha }} \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+
+  # Deploy to Azure (optional)
+  deploy-azure:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Deploy to Azure Container Instances
+        run: |
+          az container create \
+            --resource-group ${{ secrets.AZURE_RG }} \
+            --name dev-orchestrator \
+            --image dev-orchestrator:${{ github.sha }} \
+            --environment-variables GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+

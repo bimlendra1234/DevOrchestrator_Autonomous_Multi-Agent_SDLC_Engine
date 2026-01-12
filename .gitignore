@@ -8,7 +8,11 @@ wheels/
 
 # Virtual environments
 .venv
+venv/
+env/
 .env
+.env.example (template only)
+.sample_env
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/

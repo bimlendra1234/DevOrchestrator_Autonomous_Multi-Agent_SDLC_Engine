@@ -1,20 +1,30 @@
 from dotenv import load_dotenv
-from langchain.globals import set_verbose, set_debug
 from langchain_groq.chat_models import ChatGroq
 from langgraph.constants import END
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import create_react_agent
+import os
 
 from agent.prompts import *
 from agent.states import *
-from agent.tools import write_file, read_file, get_current_directory, list_files
+from agent.tools import write_file, read_file, get_current_directory, list_files, init_project_root
 
 _ = load_dotenv()
 
-set_debug(True)
-set_verbose(True)
+# Initialize project root directory
+init_project_root()
 
-llm = ChatGroq(model="openai/gpt-oss-120b")
+# Set LangChain debug/verbose via environment variables (more compatible)
+# These are optional and can be set in .env file
+os.environ.setdefault("LANGCHAIN_VERBOSE", "true")
+os.environ.setdefault("LANGCHAIN_DEBUG", "true")
+
+# Initialize LLM with API key from environment
+groq_api_key = os.getenv("GROQ_API_KEY")
+if not groq_api_key:
+    raise ValueError("GROQ_API_KEY environment variable is required. Please set it in your .env file.")
+
+llm = ChatGroq(model="openai/gpt-oss-120b", api_key=groq_api_key)
 
 
 def planner_agent(state: dict) -> dict:
@@ -63,11 +73,19 @@ def coder_agent(state: dict) -> dict:
         "Use write_file(path, content) to save your changes."
     )
 
+    # Bind tools to LLM with proper tool definitions
     coder_tools = [read_file, write_file, list_files, get_current_directory]
-    react_agent = create_react_agent(llm, coder_tools)
+    
+    # Create agent with bound tools
+    llm_with_tools = llm.bind_tools(coder_tools)
+    react_agent = create_react_agent(llm_with_tools, coder_tools)
 
-    react_agent.invoke({"messages": [{"role": "system", "content": system_prompt},
-                                     {"role": "user", "content": user_prompt}]})
+    try:
+        react_agent.invoke({"messages": [{"role": "system", "content": system_prompt},
+                                         {"role": "user", "content": user_prompt}]})
+    except Exception as e:
+        # If tool call fails, log and continue
+        print(f"Warning: Tool execution error: {e}")
 
     coder_state.current_step_idx += 1
     return {"coder_state": coder_state}

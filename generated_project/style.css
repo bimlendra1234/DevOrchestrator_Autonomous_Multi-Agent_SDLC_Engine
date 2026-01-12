@@ -1,0 +1,132 @@
+/*
+ * SimpleCalc – Responsive Calculator Styles (Updated)
+ * -------------------------------------------------
+ * This stylesheet provides a clean, modern look using the Roboto
+ * font and CSS custom properties for easy theming. It uses CSS Grid
+ * for the button layout and includes hover/active feedback as well as
+ * a mobile‑friendly media query.
+ */
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Root variables – adjust these to re‑theme the calculator */
+:root {
+    --font-family: 'Roboto', sans-serif;
+    --bg-color: #f5f5f5;            /* Calculator container background */
+    --display-bg: #ffffff;          /* Display background */
+    --btn-bg: #e0e0e0;              /* Default button background */
+    --btn-text: #333333;            /* Default button text */
+    --operator-bg: #ff9500;         /* Operator buttons */
+    --clear-bg: #d9534f;            /* Clear button */
+    --equals-bg: #5cb85c;           /* Equals button */
+    --spacing: 0.5rem;
+    --border-radius: 0.5rem;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --display-font-size: 2rem;
+    --btn-font-size: 1.5rem;
+}
+
+/* Global reset for the calculator area */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: #fafafa; /* subtle page background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* Calculator container */
+#calculator {
+    max-width: 400px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: var(--spacing);
+    background: var(--bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+/* Display – read‑only input */
+.display {
+    width: 100%;
+    font-size: var(--display-font-size);
+    padding: var(--spacing);
+    margin-bottom: var(--spacing);
+    border: none;
+    background: var(--display-bg);
+    border-radius: var(--border-radius);
+    text-align: right;
+    color: var(--btn-text);
+    pointer-events: none; /* prevent editing */
+    box-sizing: border-box;
+}
+
+/* Button grid */
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing);
+}
+
+/* Base button style */
+.btn {
+    font-family: var(--font-family);
+    font-size: var(--btn-font-size);
+    padding: var(--spacing);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    box-sizing: border-box;
+}
+
+/* Operator buttons (identified by data-value of an operator) */
+.btn[data-value="/"],
+.btn[data-value="*"],
+.btn[data-value="-"],
+.btn[data-value="+"] {
+    background: var(--operator-bg);
+    color: #ffffff;
+}
+
+/* Clear button */
+#clear {
+    background: var(--clear-bg);
+    color: #ffffff;
+}
+
+/* Equals button */
+#equals {
+    background: var(--equals-bg);
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Hover and active feedback */
+.btn:hover {
+    filter: brightness(1.1);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 480px) {
+    #calculator {
+        max-width: 90%;
+        margin: 1rem auto;
+    }
+    .display {
+        font-size: 1.5rem;
+    }
+    .btn {
+        font-size: 1.2rem;
+        padding: calc(var(--spacing) * 0.8);
+    }
+}

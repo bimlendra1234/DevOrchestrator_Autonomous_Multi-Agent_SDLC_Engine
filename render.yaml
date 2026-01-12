@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: dev-orchestrator
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: PORT
+        value: 8000
+      - key: HOST
+        value: 0.0.0.0
+    healthCheckPath: /api/health
+    autoDeploy: true
+
