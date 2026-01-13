@@ -1,21 +1,41 @@
-// DOM Elements
-const projectForm = document.getElementById('projectForm');
-const promptTextarea = document.getElementById('prompt');
-const recursionLimitInput = document.getElementById('recursionLimit');
-const outputPanel = document.getElementById('outputPanel');
-const outputContent = document.getElementById('outputContent');
-const statusBadge = document.getElementById('statusBadge');
-const miniSpinner = document.getElementById('miniSpinner');
-const examplesGrid = document.getElementById('examplesGrid');
-const filesPanel = document.getElementById('filesPanel');
-const fileTree = document.getElementById('fileTree');
-const fileViewer = document.getElementById('fileViewer');
-const fileContent = document.getElementById('fileContent');
-const currentFile = document.getElementById('currentFile');
-const successActions = document.getElementById('successActions');
-const projectModal = document.getElementById('projectModal');
-const projectFrame = document.getElementById('projectFrame');
-const projectInfo = document.getElementById('projectInfo');
+// DOM Elements - Initialize with null checks
+let projectForm = null;
+let promptTextarea = null;
+let recursionLimitInput = null;
+let outputPanel = null;
+let outputContent = null;
+let statusBadge = null;
+let miniSpinner = null;
+let examplesGrid = null;
+let filesPanel = null;
+let fileTree = null;
+let fileViewer = null;
+let fileContent = null;
+let currentFile = null;
+let successActions = null;
+let projectModal = null;
+let projectFrame = null;
+let projectInfo = null;
+
+function initializeDOMElements() {
+    projectForm = document.getElementById('projectForm');
+    promptTextarea = document.getElementById('prompt');
+    recursionLimitInput = document.getElementById('recursionLimit');
+    outputPanel = document.getElementById('outputPanel');
+    outputContent = document.getElementById('outputContent');
+    statusBadge = document.getElementById('statusBadge');
+    miniSpinner = document.getElementById('miniSpinner');
+    examplesGrid = document.getElementById('examplesGrid');
+    filesPanel = document.getElementById('filesPanel');
+    fileTree = document.getElementById('fileTree');
+    fileViewer = document.getElementById('fileViewer');
+    fileContent = document.getElementById('fileContent');
+    currentFile = document.getElementById('currentFile');
+    successActions = document.getElementById('successActions');
+    projectModal = document.getElementById('projectModal');
+    projectFrame = document.getElementById('projectFrame');
+    projectInfo = document.getElementById('projectInfo');
+}
 
 // API Configuration
 const API_BASE = '/api';
@@ -23,6 +43,7 @@ const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${win
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    initializeDOMElements();
     setupEventListeners();
     loadExamples();
 });
