@@ -1,23 +1,16 @@
-// DOM Elements - Initialize with null checks
-let projectForm = null;
-let promptTextarea = null;
-let recursionLimitInput = null;
-let outputPanel = null;
-let outputContent = null;
-let statusBadge = null;
-let miniSpinner = null;
-let examplesGrid = null;
-let filesPanel = null;
-let fileTree = null;
-let fileViewer = null;
-let fileContent = null;
-let currentFile = null;
-let successActions = null;
-let projectModal = null;
-let projectFrame = null;
-let projectInfo = null;
+// DOM Elements - Initialize safely
+let projectForm, promptTextarea, recursionLimitInput, outputPanel, outputContent;
+let statusBadge, miniSpinner, examplesGrid, filesPanel, fileTree;
+let fileViewer, fileContent, currentFile, successActions, projectModal;
+let projectFrame, projectInfo;
 
-function initializeDOMElements() {
+// API Configuration
+const API_BASE = '/api';
+const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/generate`;
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Get DOM elements
     projectForm = document.getElementById('projectForm');
     promptTextarea = document.getElementById('prompt');
     recursionLimitInput = document.getElementById('recursionLimit');
@@ -35,15 +28,8 @@ function initializeDOMElements() {
     projectModal = document.getElementById('projectModal');
     projectFrame = document.getElementById('projectFrame');
     projectInfo = document.getElementById('projectInfo');
-}
-
-// API Configuration
-const API_BASE = '/api';
-const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/generate`;
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    initializeDOMElements();
+    
+    // Setup listeners and load examples
     setupEventListeners();
     loadExamples();
 });
@@ -410,7 +396,16 @@ function hideSuccessActions() {
     }
 }
 
-        this.parentElement.style.borderColor = 'var(--border-color)';
+// Add some visual feedback for form interactions
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.borderColor = 'var(--primary-color)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.borderColor = 'var(--border-color)';
+        });
     });
 });
 
