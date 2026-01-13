@@ -22,7 +22,3 @@ except Exception as e:
 
 # Export the app for Vercel
 __all__ = ['app']
-
-
-# Export the app for Vercel
-__all__ = ['app']
