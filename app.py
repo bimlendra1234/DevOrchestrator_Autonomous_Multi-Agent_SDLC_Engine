@@ -315,6 +315,39 @@ async def get_file_tree():
         "tree": build_tree(generated_dir)
     }
 
+@app.get("/api/project-preview")
+async def get_project_preview():
+    """Get the generated project's index.html content"""
+    from pathlib import Path
+    
+    generated_dir = Path(__file__).parent / "generated_project"
+    index_file = generated_dir / "index.html"
+    
+    if not index_file.exists():
+        logger.warning("index.html not found in generated_project")
+        return {
+            "status": "not_found",
+            "message": "Project index.html not found. Please generate a project first.",
+            "content": ""
+        }
+    
+    try:
+        with open(index_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        return {
+            "status": "success",
+            "content": content,
+            "path": str(index_file)
+        }
+    except Exception as e:
+        logger.error(f"Error reading project index.html: {e}")
+        return {
+            "status": "error",
+            "message": f"Error reading project: {str(e)}",
+            "content": ""
+        }
+
 # ==================== Error Handlers ====================
 
 @app.exception_handler(HTTPException)
