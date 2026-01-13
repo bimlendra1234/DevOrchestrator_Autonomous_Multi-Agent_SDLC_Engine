@@ -1,10 +1,11 @@
 /*
- * SimpleCalc – Responsive Calculator Styles (Updated)
+ * SimpleCalc – Responsive Calculator Styles
  * -------------------------------------------------
- * This stylesheet provides a clean, modern look using the Roboto
- * font and CSS custom properties for easy theming. It uses CSS Grid
- * for the button layout and includes hover/active feedback as well as
- * a mobile‑friendly media query.
+ * This stylesheet defines a clean, modern look for the calculator UI.
+ * It uses CSS custom properties (variables) for easy theming, flexbox for
+ * centering the calculator, and CSS Grid for the keypad layout. Colors,
+ * font‑sizes and spacing are defined at the root level so they can be
+ * tweaked quickly.
  */
 
 /* Import Google Font */
@@ -12,60 +13,69 @@
 
 /* Root variables – adjust these to re‑theme the calculator */
 :root {
+    /* Typography */
     --font-family: 'Roboto', sans-serif;
-    --bg-color: #f5f5f5;            /* Calculator container background */
-    --display-bg: #ffffff;          /* Display background */
-    --btn-bg: #e0e0e0;              /* Default button background */
-    --btn-text: #333333;            /* Default button text */
-    --operator-bg: #ff9500;         /* Operator buttons */
-    --clear-bg: #d9534f;            /* Clear button */
-    --equals-bg: #5cb85c;           /* Equals button */
+    --display-font-size: 2rem;
+    --btn-font-size: 1.5rem;
+
+    /* Colours */
+    --page-bg: #fafafa;          /* Page background */
+    --calc-bg: #f5f5f5;          /* Calculator container background */
+    --display-bg: #ffffff;      /* Display background */
+    --btn-bg: #e0e0e0;          /* Default button background */
+    --btn-text: #333333;        /* Default button text */
+    --operator-bg: #ff9500;     /* Operator buttons */
+    --clear-bg: #d9534f;        /* Clear button */
+    --backspace-bg: #6c757d;    /* Backspace button */
+    --equals-bg: #5cb85c;       /* Equals button */
+
+    /* Layout */
     --spacing: 0.5rem;
     --border-radius: 0.5rem;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --display-font-size: 2rem;
-    --btn-font-size: 1.5rem;
 }
 
-/* Global reset for the calculator area */
+/* Global reset and page layout */
 body {
     margin: 0;
     font-family: var(--font-family);
-    background: #fafafa; /* subtle page background */
+    background: var(--page-bg);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* vertically centre */
     min-height: 100vh;
 }
 
 /* Calculator container */
-#calculator {
+.calculator {
     max-width: 400px;
     width: 100%;
-    margin: 2rem auto;
-    padding: var(--spacing);
-    background: var(--bg-color);
+    background: var(--calc-bg);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    padding: var(--spacing);
+    box-sizing: border-box;
 }
 
-/* Display – read‑only input */
+/* Display – read‑only output */
 .display {
     width: 100%;
+    height: 3rem;               /* Fixed height */
     font-size: var(--display-font-size);
     padding: var(--spacing);
     margin-bottom: var(--spacing);
-    border: none;
     background: var(--display-bg);
     border-radius: var(--border-radius);
     text-align: right;
     color: var(--btn-text);
-    pointer-events: none; /* prevent editing */
+    overflow: hidden;          /* Hide overflow */
+    text-overflow: ellipsis;
+    white-space: nowrap;
     box-sizing: border-box;
 }
 
-/* Button grid */
-.buttons-grid {
+/* Keypad – grid layout */
+.keypad {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing);
@@ -75,33 +85,36 @@ body {
 .btn {
     font-family: var(--font-family);
     font-size: var(--btn-font-size);
-    padding: var(--spacing);
     background: var(--btn-bg);
     color: var(--btn-text);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
+    padding: var(--spacing);
     transition: background 0.2s ease, transform 0.1s ease;
     box-sizing: border-box;
 }
 
-/* Operator buttons (identified by data-value of an operator) */
-.btn[data-value="/"],
-.btn[data-value="*"],
-.btn[data-value="-"],
-.btn[data-value="+"] {
+/* Operator buttons */
+.btn[data-action="operator"] {
     background: var(--operator-bg);
     color: #ffffff;
 }
 
 /* Clear button */
-#clear {
+.btn[data-action="clear"] {
     background: var(--clear-bg);
     color: #ffffff;
 }
 
+/* Backspace button */
+.btn[data-action="backspace"] {
+    background: var(--backspace-bg);
+    color: #ffffff;
+}
+
 /* Equals button */
-#equals {
+.btn[data-action="equals"] {
     background: var(--equals-bg);
     color: #ffffff;
     font-weight: 500;
@@ -112,18 +125,24 @@ body {
     filter: brightness(1.1);
 }
 
+.btn:focus {
+    outline: 2px solid rgba(0,0,0,0.2);
+    outline-offset: 2px;
+}
+
 .btn:active {
     transform: scale(0.97);
 }
 
 /* Responsive adjustments for small screens */
-@media (max-width: 480px) {
-    #calculator {
+@media (max-width: 600px) {
+    .calculator {
         max-width: 90%;
-        margin: 1rem auto;
+        padding: calc(var(--spacing) * 0.8);
     }
     .display {
         font-size: 1.5rem;
+        height: 2.5rem;
     }
     .btn {
         font-size: 1.2rem;

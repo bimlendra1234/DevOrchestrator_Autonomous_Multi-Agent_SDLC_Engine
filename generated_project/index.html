@@ -3,33 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SimpleCalc</title>
+  <title>Simple Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="calculator" class="calculator">
-    <input type="text" id="display" class="display" readonly aria-label="Calculator display">
-    <div class="buttons-grid">
+  <div class="calculator">
+    <div class="display" id="calc-display"></div>
+    <div class="keypad">
       <!-- Digits -->
-      <button class="btn" data-value="7">7</button>
-      <button class="btn" data-value="8">8</button>
-      <button class="btn" data-value="9">9</button>
-      <button class="btn" data-value="/" id="divide">/</button>
+      <button class="btn" data-action="digit" data-value="7">7</button>
+      <button class="btn" data-action="digit" data-value="8">8</button>
+      <button class="btn" data-action="digit" data-value="9">9</button>
+      <button class="btn" data-action="operator" data-value="/">/</button>
 
-      <button class="btn" data-value="4">4</button>
-      <button class="btn" data-value="5">5</button>
-      <button class="btn" data-value="6">6</button>
-      <button class="btn" data-value="*" id="multiply">*</button>
+      <button class="btn" data-action="digit" data-value="4">4</button>
+      <button class="btn" data-action="digit" data-value="5">5</button>
+      <button class="btn" data-action="digit" data-value="6">6</button>
+      <button class="btn" data-action="operator" data-value="*">*</button>
 
-      <button class="btn" data-value="1">1</button>
-      <button class="btn" data-value="2">2</button>
-      <button class="btn" data-value="3">3</button>
-      <button class="btn" data-value="-" id="subtract">-</button>
+      <button class="btn" data-action="digit" data-value="1">1</button>
+      <button class="btn" data-action="digit" data-value="2">2</button>
+      <button class="btn" data-action="digit" data-value="3">3</button>
+      <button class="btn" data-action="operator" data-value="-">-</button>
 
-      <button class="btn" data-value="0">0</button>
-      <button class="btn" data-value="C" id="clear">C</button>
-      <button class="btn" data-value="=" id="equals">=</button>
-      <button class="btn" data-value="+" id="add">+</button>
+      <button class="btn" data-action="digit" data-value="0">0</button>
+      <button class="btn" data-action="decimal" data-value=".">.</button>
+      <button class="btn" data-action="clear" data-value="C">C</button>
+      <button class="btn" data-action="operator" data-value="+">+</button>
+
+      <button class="btn" data-action="backspace" data-value="←">←</button>
+      <button class="btn" data-action="equals" data-value="=">=</button>
     </div>
   </div>
   <script src="script.js"></script>

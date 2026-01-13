@@ -323,63 +323,12 @@ function copyToClipboard(text) {
 // View generated project in modal
 async function viewGeneratedProject() {
     try {
-        projectModal.classList.remove('hidden');
-        projectFrame.innerHTML = `
-            <div class="loading-spinner">
-                <i class="fas fa-spinner"></i>
-                <p>Loading project...</p>
-            </div>
-        `;
-        
-        const response = await fetch(`${API_BASE}/project-preview`);
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            // Create an iframe and set its content
-            const iframe = document.createElement('iframe');
-            iframe.className = 'project-iframe';
-            iframe.title = 'Generated Project Preview';
-            
-            projectFrame.innerHTML = '';
-            projectFrame.appendChild(iframe);
-            
-            // Write the HTML content to the iframe
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(data.content);
-            iframeDoc.close();
-            
-            projectInfo.textContent = `Project loaded successfully - ${new Date().toLocaleTimeString()}`;
-            projectInfo.style.color = 'var(--success-color)';
-        } else {
-            projectFrame.innerHTML = `
-                <div class="error-state">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <h3>Cannot Load Project</h3>
-                    <p>${data.message}</p>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Generate a project first, then try again.</p>
-                </div>
-            `;
-            projectInfo.textContent = 'Error loading project preview';
-            projectInfo.style.color = 'var(--danger-color)';
-        }
+        // Open the project viewer in a new window/tab for better experience
+        window.open('/project-viewer', 'project-preview', 'width=1200,height=800,resizable=yes,scrollbars=yes');
     } catch (error) {
-        console.error('Error viewing project:', error);
-        projectFrame.innerHTML = `
-            <div class="error-state">
-                <i class="fas fa-exclamation-circle"></i>
-                <h3>Error Loading Project</h3>
-                <p>${error.message}</p>
-            </div>
-        `;
-        projectInfo.textContent = 'Error: ' + error.message;
-        projectInfo.style.color = 'var(--danger-color)';
+        console.error('Error opening project:', error);
+        showOutput(`Error: Could not open project preview - ${error.message}`, 'error');
     }
-}
-
-function closeProjectModal() {
-    projectModal.classList.add('hidden');
-    projectFrame.innerHTML = '';
 }
 
 // Show success actions button

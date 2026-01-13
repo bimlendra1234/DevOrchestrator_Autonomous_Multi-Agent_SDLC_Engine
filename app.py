@@ -348,6 +348,76 @@ async def get_project_preview():
             "content": ""
         }
 
+@app.get("/project-viewer")
+async def project_viewer():
+    """Serve the generated project viewer page with corrected asset paths"""
+    from pathlib import Path
+    
+    generated_dir = Path(__file__).parent / "generated_project"
+    index_file = generated_dir / "index.html"
+    
+    if not index_file.exists():
+        return HTMLResponse("""
+        <html>
+        <head>
+            <title>No Project Generated</title>
+            <style>
+                body { font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f5f5f5; }
+                .message { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+                h1 { color: #333; margin: 0 0 10px 0; }
+                p { color: #666; margin: 0; }
+            </style>
+        </head>
+        <body>
+            <div class="message">
+                <h1>No Project Generated</h1>
+                <p>Please generate a project first, then use the View Project button.</p>
+            </div>
+        </body>
+        </html>
+        """, status_code=404)
+    
+    try:
+        with open(index_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Fix asset paths: replace relative paths with /project-assets/
+        # Handle common patterns: href="file.css", src="file.js", href='file.css', src='file.js'
+        import re
+        
+        # Replace href="style.css" or href="styles.css" etc with href="/project-assets/style.css"
+        content = re.sub(r'href=["\'](?!(?:https?:|/))([^"\']+)["\']', r'href="/project-assets/\1"', content)
+        # Replace src="script.js" with src="/project-assets/script.js"
+        content = re.sub(r'src=["\'](?!(?:https?:|/))([^"\']+)["\']', r'src="/project-assets/\1"', content)
+        
+        # Return HTML directly with proper asset paths
+        return HTMLResponse(content)
+    except Exception as e:
+        logger.error(f"Error serving project: {e}")
+        return HTMLResponse(f"""
+        <html>
+        <head>
+            <title>Error Loading Project</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f5f5f5; }}
+                .message {{ background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }}
+                h1 {{ color: #d32f2f; margin: 0 0 10px 0; }}
+                p {{ color: #666; margin: 0; }}
+            </style>
+        </head>
+        <body>
+            <div class="message">
+                <h1>Error Loading Project</h1>
+                <p>{str(e)}</p>
+            </div>
+        </body>
+        </html>
+        """, status_code=500)
+
+
+# Serve generated project static files
+app.mount("/project-assets", StaticFiles(directory=str(Path(__file__).parent / "generated_project")), name="project-assets")
+
 # ==================== Error Handlers ====================
 
 @app.exception_handler(HTTPException)
