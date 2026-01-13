@@ -416,8 +416,11 @@ async def project_viewer():
 
 
 # Serve generated project static files
-app.mount("/project-assets", StaticFiles(directory=str(Path(__file__).parent / "generated_project")), name="project-assets")
+# Create directory if it doesn't exist (important for fresh deployments)
+generated_project_dir = Path(__file__).parent / "generated_project"
+generated_project_dir.mkdir(exist_ok=True)
 
+app.mount("/project-assets", StaticFiles(directory=str(generated_project_dir)), name="project-assets")
 # ==================== Error Handlers ====================
 
 @app.exception_handler(HTTPException)
